@@ -72,7 +72,7 @@ int *traveled(struct gnode GRAPH[], int tally[24])
 			Visited[ci] = 0;
 			previous[ci] = -1;
 		}
-		//prev, dist, visited cleared and ready to repopulate from a new start point
+		//prev, dist, visited cleared and ready to repopulate from a new start point and re-tally
 
 		while (!exit) {
 			loopi = 0;
