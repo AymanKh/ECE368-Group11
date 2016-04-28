@@ -8,11 +8,12 @@ using namespace std;
 struct gnode {
 	int name;
 	int fnums[24];
-} graph[24];
+};
 
-void parseline(string line, gnode graph);
+void parseline(string line, gnode *g, int j);
 int *traveled(struct gnode GRAPH[], int tally[24]);
 int main () {
+    struct gnode graph[24];
 	ifstream infile;
     infile.open("Social2.txt");
 	if (infile.is_open() != 1) {
@@ -20,39 +21,52 @@ int main () {
 		return 0;
 	}
 	int i = 0;
+    int *travel;
     string line;
 	while (i < 24) {
 		getline(infile, line);
-		parseline(line, graph[i]);
+		parseline(line, graph, i);
         i++;
 	}
+    //printf("GRAPH[2].fnums[0] = %d\n", graph[2].fnums[0]);
+    //printf("GRAPH[2].fnums[1] = %d\n", graph[2].fnums[1]);
+    //printf("GRAPH[2].fnums[2] = %d\n", graph[2].fnums[2]);
+    //printf("GRAPH[2].fnums[3] = %d\n", graph[2].fnums[3]);
+    
+    int tally[24] = {0};
+    //printf("INITIAL (0,0) = %d\n", graph[0].fnums[0]);
+    travel = traveled(graph, tally);
 	
 	infile.close();
 	return 0;
 }
 
-void parseline(string line, gnode graph)
+void parseline(string line, gnode *g, int j)
 {
     int i = 0;
     string curr;
     istringstream iss(line);
     getline(iss, curr, ':');
-    graph.name = stoi(curr, nullptr, 10);
+    g[j].name = stoi(curr, nullptr, 10);
     while (i < 24) {
         getline(iss, curr, ',');
-        graph.fnums[i] = stoi(curr, nullptr, 10);
+        g[j].fnums[i] = stoi(curr, nullptr, 10);
         i++;
     }
+    //printf("parseline GRAPH[2].fnums[1] = %d %d %d %d\n", g.fnums[0], g.fnums[1], g.fnums[2], g.fnums[3]);
 }
 
 
 int *traveled(struct gnode GRAPH[], int tally[24])
 {
+    //printf("node: GRAPH[2].fnums[1] = %d\n", GRAPH[2].fnums[1]);
+    int INF = 2147483647;
 	int dist[24] = { INF };
 	int Visited[24] = { 0 };
 	int previous[24] = { -1 };
 	int k = 0;
 	int source;
+    int n = 0;
 	for (k = 0; k < 24; k++)//for each start point
 	{
 		int u = k;
@@ -68,6 +82,7 @@ int *traveled(struct gnode GRAPH[], int tally[24])
 			Visited[ci] = 0;
 			previous[ci] = -1;
 		}
+        dist[u] = 0;
 		//prev, dist, visited cleared and ready to repopulate from a new start point and re-tally
 
 		while (!exit) {
@@ -78,6 +93,7 @@ int *traveled(struct gnode GRAPH[], int tally[24])
 			{
 				if (GRAPH[u].fnums[loopi] != 0)//we have found a neighbor
 				{
+                    //printf("u = %d, loopi = %d, GRAPH[u].fnums[loopi] = %d\n", u, loopi, GRAPH[u].fnums[loopi]);
 					if (dist[loopi] > dist[u] + (10 - GRAPH[u].fnums[loopi]))
 					{
 						//printf("updating %s %f to %f\n",Territories[loopi].name,Dist$
@@ -109,22 +125,26 @@ int *traveled(struct gnode GRAPH[], int tally[24])
 			//now have next node to go to
 			u = minindex;
 		}//prev needs to be   tallied
-		int n = 0;
+        int zzz = 0;
+        for (zzz = 0; zzz < 24; zzz++) {
+            //printf("z = %d, previous = %d\n", zzz, previous[zzz]);
+        }
+		
 		for (n = 0; n < 24; n++)
 		{
 			int p = n;
 			while (previous[p] != -1)
 			{
+                //printf("%d\n", p);
 				p = previous[p];
 				tally[p]++;
 			}
 		}
-		for (n = 0; n < 24; n++)
-		{
-			printf("node=%d,tally=%d\n", n, tally[n]);
-		}
+		
 	}
-
-
+    for (n = 0; n < 24; n++)
+	{
+		printf("node=%d,tally=%d\n", n, tally[n]);
+	}
 
 }
