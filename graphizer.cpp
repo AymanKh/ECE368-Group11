@@ -2,25 +2,26 @@
 #include <istream>
 #include <fstream>
 #include <string>
+#include <sstream>
 using namespace std;
 
 struct gnode {
-	char name[40];
-	int fnums[40];
-} graph[40];
+	int name;
+	int fnums[24];
+} graph[24];
 
 void parseline(string line, gnode graph);
 
 int main () {
 	ifstream infile;
-    infile.open("example.txt");
+    infile.open("Social2.txt");
 	if (infile.is_open() != 1) {
 		printf("Error, could not open file");
 		return 0;
 	}
 	int i = 0;
     string line;
-	while (i < 40) {
+	while (i < 24) {
 		getline(infile, line);
 		parseline(line, graph[i]);
         i++;
@@ -32,18 +33,14 @@ int main () {
 
 void parseline(string line, gnode graph)
 {
-	int spaces = 0;
-	int i = 0;
-	int j = 0;
-	while (spaces < 2) {
-		graph.name[i] = line[i];
-		i++;
-		if (isspace(line[i])) {
-			spaces++;
-		}
-	}
-	while (j < 40) {
-		graph.fnums[i] = line[j+i];
-        j++;
-	}
+    int i = 0;
+    string curr;
+    istringstream iss(line);
+    getline(iss, curr, ':');
+    graph.name = stoi(curr, nullptr, 10);
+    while (i < 24) {
+        getline(iss, curr, ',');
+        graph.fnums[i] = stoi(curr, nullptr, 10);
+        i++;
+    }
 }
