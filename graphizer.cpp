@@ -112,7 +112,7 @@ int *traveled(struct gnode GRAPH[], int tally[24])
 			}
 			//now have next node to go to
 			u = minindex;
-		}//prev needs to be tallied
+		}//prev needs to be   tallied
 		int n = 0;
 		for (n = 0; n < 24; n++)
 		{
